@@ -38,3 +38,43 @@ export default async function handler(req, res) {
     return res.status(200).send(theOfficeLinesRes)
   }
 }
+
+export const getAllEpisodes = async () => {
+  const { data, error } = await supabase.rpc('get_all_episodes')
+
+  const seasonNums = Array.from(new Set(data.map((episode) => episode.season)))
+
+  const episodes = {}
+  data.forEach((episode) => {
+    const episodeNum = episode.episode
+
+    if (!Object.keys(episodes).includes(episodeNum.toString())) {
+      episodes[episodeNum.toString()] = []
+    }
+    episodes[episodeNum.toString()].push(episode)
+  })
+
+  // Slot in null values for seasons without certain episodes
+  Object.keys(episodes).forEach((seasonNum, i) => {
+    for (let j = 0; j < 9; j++) {
+      if (episodes[seasonNum][j]?.season !== j + 1) {
+        episodes[seasonNum].splice(j, 0, null)
+      }
+    }
+  })
+
+  return {
+    seasonNums,
+    episodes,
+  }
+}
+
+export const getLinesFromEpisode = async (seasonId, episodeId) => {
+  const { data: linesFromEpisodeRes, error } = await supabase.rpc(
+    'get_lines_from_episode',
+    // SQL variables need to be entirely lower case!
+    { season_id: seasonId, episode_id: episodeId }
+  )
+
+  return linesFromEpisodeRes
+}
