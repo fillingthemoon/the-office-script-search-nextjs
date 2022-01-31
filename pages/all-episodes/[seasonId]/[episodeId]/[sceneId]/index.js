@@ -189,8 +189,6 @@ export async function getStaticPaths() {
     })
   })
 
-  console.log(paramsArray)
-
   return {
     fallback: false,
     paths: paramsArray,
