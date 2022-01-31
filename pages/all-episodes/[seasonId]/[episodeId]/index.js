@@ -163,30 +163,29 @@ const Home = (props) => {
 }
 
 // (Static Generation): Specify dynamic routes to pre-render pages based on data.
-export async function getStaticPaths() {
-  const seasonEpisodeSceneCounts = await getSeasonEpisodeSceneCounts()
+// export async function getStaticPaths() {
+//   const seasonEpisodeSceneCounts = await getSeasonEpisodeSceneCounts()
 
-  const paramsArray = []
-  Object.keys(seasonEpisodeSceneCounts).forEach((seasonNum) => {
-    Object.keys(seasonEpisodeSceneCounts[seasonNum]).forEach((episodeNum) => {
-      paramsArray.push({
-        params: {
-          seasonId: seasonNum.toString(),
-          episodeId: episodeNum.toString(),
-        },
-      })
-    })
-  })
+//   const paramsArray = []
+//   Object.keys(seasonEpisodeSceneCounts).forEach((seasonNum) => {
+//     Object.keys(seasonEpisodeSceneCounts[seasonNum]).forEach((episodeNum) => {
+//       paramsArray.push({
+//         params: {
+//           seasonId: seasonNum.toString(),
+//           episodeId: episodeNum.toString(),
+//         },
+//       })
+//     })
+//   })
 
-  return {
-    fallback: false,
-    paths: paramsArray,
-  }
-}
+//   return {
+//     fallback: false,
+//     paths: paramsArray,
+//   }
+// }
 
-export async function getStaticProps(context) {
-  const seasonId = context.params.seasonId
-  const episodeId = context.params.episodeId
+export async function getServerSideProps(context) {
+  const { seasonId, episodeId } = context.params
   const linesFromEpisodeRes = await getLinesFromEpisode(seasonId, episodeId)
 
   return {
@@ -194,7 +193,7 @@ export async function getStaticProps(context) {
       linesFromEpisodeRes,
     },
 
-    revalidate: 60,
+    // revalidate: 60,
   }
 }
 

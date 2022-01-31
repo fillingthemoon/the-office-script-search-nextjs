@@ -165,37 +165,37 @@ const Home = (props) => {
 }
 
 // (Static Generation): Specify dynamic routes to pre-render pages based on data.
-export async function getStaticPaths() {
-  const seasonEpisodeSceneCounts = await getSeasonEpisodeSceneCounts()
+// export async function getStaticPaths() {
+//   const seasonEpisodeSceneCounts = await getSeasonEpisodeSceneCounts()
 
-  const paramsArray = []
-  Object.keys(seasonEpisodeSceneCounts).forEach((seasonNum) => {
-    Object.keys(seasonEpisodeSceneCounts[seasonNum]).forEach((episodeNum) => {
-      for (
-        let i = 0;
-        i < seasonEpisodeSceneCounts[seasonNum][episodeNum];
-        i++
-      ) {
-        const sceneNum = i + 1
+//   const paramsArray = []
+//   Object.keys(seasonEpisodeSceneCounts).forEach((seasonNum) => {
+//     Object.keys(seasonEpisodeSceneCounts[seasonNum]).forEach((episodeNum) => {
+//       for (
+//         let i = 0;
+//         i < seasonEpisodeSceneCounts[seasonNum][episodeNum];
+//         i++
+//       ) {
+//         const sceneNum = i + 1
 
-        paramsArray.push({
-          params: {
-            seasonId: seasonNum.toString(),
-            episodeId: episodeNum.toString(),
-            sceneId: sceneNum.toString(),
-          },
-        })
-      }
-    })
-  })
+//         paramsArray.push({
+//           params: {
+//             seasonId: seasonNum.toString(),
+//             episodeId: episodeNum.toString(),
+//             sceneId: sceneNum.toString(),
+//           },
+//         })
+//       }
+//     })
+//   })
 
-  return {
-    fallback: false,
-    paths: paramsArray,
-  }
-}
+//   return {
+//     fallback: false,
+//     paths: paramsArray,
+//   }
+// }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   const seasonId = context.params.seasonId
   const episodeId = context.params.episodeId
   const sceneId = context.params.sceneId
@@ -210,7 +210,7 @@ export async function getStaticProps(context) {
       linesFromSceneRes,
     },
 
-    revalidate: 60,
+    // revalidate: 60,
   }
 }
 

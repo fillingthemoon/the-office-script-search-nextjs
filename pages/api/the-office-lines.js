@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 
-export const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-)
-
 export default async function handler(req, res) {
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  )
+  
   // Only GET mothod is accepted
   if (req.method === 'GET') {
     const searchQuery = req.query.q
@@ -40,6 +40,11 @@ export default async function handler(req, res) {
 }
 
 export const getAllEpisodes = async () => {
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  )
+
   const { data, error } = await supabase.rpc('get_all_episodes_list')
 
   const seasonNums = Array.from(new Set(data.map((episode) => episode.season)))
@@ -70,6 +75,11 @@ export const getAllEpisodes = async () => {
 }
 
 export const getSeasonEpisodeSceneCounts = async () => {
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  )
+
   // Just the season numbers, episode numbers, and max scene numbers (cannot return >1000 records)
   const { data, error } = await supabase.rpc('get_all_episodes')
 
@@ -92,6 +102,13 @@ export const getSeasonEpisodeSceneCounts = async () => {
 }
 
 export const getLinesFromEpisode = async (seasonId, episodeId, sceneId) => {
+  // Need to have supabase client here because [<example>Id] pages will encounter an
+  // error when using getServerSideProps with supabase client declared outside
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  )
+
   const { data: linesFromEpisodeRes, error } = await supabase.rpc(
     'get_lines_from_episode',
     // SQL variables need to be entirely lower case!
