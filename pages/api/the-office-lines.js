@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 }
 
 export const getAllEpisodes = async () => {
-  const { data, error } = await supabase.rpc('get_all_episodes')
+  const { data, error } = await supabase.rpc('get_all_episodes_list')
 
   const seasonNums = Array.from(new Set(data.map((episode) => episode.season)))
 
@@ -69,11 +69,33 @@ export const getAllEpisodes = async () => {
   }
 }
 
-export const getLinesFromEpisode = async (seasonId, episodeId) => {
+export const getSeasonEpisodeSceneCounts = async () => {
+  // Just the season numbers, episode numbers, and max scene numbers (cannot return >1000 records)
+  const { data, error } = await supabase.rpc('get_all_episodes')
+
+  const seasonEpisodeSceneCounts = {}
+
+  data.forEach((episodeItem) => {
+    const season = episodeItem.season.toString()
+    const episode = episodeItem.episode.toString()
+    const scene = episodeItem.scene.toString()
+
+    if (!Object.keys(seasonEpisodeSceneCounts).includes(season)) {
+      seasonEpisodeSceneCounts[season] = {}
+    }
+    if (!Object.keys(seasonEpisodeSceneCounts[season]).includes(episode)) {
+      seasonEpisodeSceneCounts[season][episode] = scene
+    }
+  })
+
+  return seasonEpisodeSceneCounts
+}
+
+export const getLinesFromEpisode = async (seasonId, episodeId, sceneId) => {
   const { data: linesFromEpisodeRes, error } = await supabase.rpc(
     'get_lines_from_episode',
     // SQL variables need to be entirely lower case!
-    { season_id: seasonId, episode_id: episodeId }
+    { season_id: seasonId, episode_id: episodeId, scene_id: sceneId }
   )
 
   return linesFromEpisodeRes

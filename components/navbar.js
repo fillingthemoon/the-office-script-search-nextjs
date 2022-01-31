@@ -59,7 +59,7 @@ const Navbar = () => {
             />
             <HStack spacing={20}>
               <NextLink href="/" passHref>
-                <Link>
+                <Link _hover={{ textDecoration: 'none' }}>
                   <HStack spacing={4}>
                     <Text
                       color="white.500"

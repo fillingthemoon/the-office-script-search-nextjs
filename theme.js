@@ -13,7 +13,7 @@ const primary = '#01161e'
 const primaryL = '#01161e'
 const primaryD = '#01161e'
 
-const secondary = '#27a7e3'
+const secondary = '#2688eb'
 
 export { black, grayL, grayLL, gray, grayD, grayDD, white, primary, primaryL }
 

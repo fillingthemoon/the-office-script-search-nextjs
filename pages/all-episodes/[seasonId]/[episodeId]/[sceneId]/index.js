@@ -15,18 +15,18 @@ import {
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import { useTable, useSortBy } from 'react-table'
 
-import Layout from '../../../../components/layout'
+import Layout from '../../../../../components/layout'
 
 import {
   getSeasonEpisodeSceneCounts,
   getLinesFromEpisode,
-} from '../../../api/the-office-lines'
+} from '../../../../api/the-office-lines'
 
 const Home = (props) => {
-  const { linesFromEpisodeRes } = props
+  const { linesFromSceneRes } = props
   const router = useRouter()
 
-  const data = useMemo(() => linesFromEpisodeRes, [linesFromEpisodeRes])
+  const data = useMemo(() => linesFromSceneRes, [linesFromSceneRes])
 
   const columns = useMemo(
     () => [
@@ -85,13 +85,13 @@ const Home = (props) => {
     const episode = cell.row.cells[2].value
     const scene = cell.row.cells[3].value
 
-    router.push(`/all-episodes/${season}/${episode}/${scene}`)
+    router.push(`/all-episodes/${season}/${episode}`)
   }
 
   return (
     <div>
       <Head>
-        <title>{`Episode ${linesFromEpisodeRes[0].episode} Lines | The Office Script Search`}</title>
+        <title>{`Episode ${linesFromSceneRes[0].episode} Lines | The Office Script Search`}</title>
       </Head>
       <Layout>
         <Flex justify="center">
@@ -129,7 +129,9 @@ const Home = (props) => {
                   return (
                     <Tr key={i} {...row.getRowProps()}>
                       {row.cells.map((cell, j) => {
-                        const clickableCell = ['scene'].includes(cell.column.id)
+                        const clickableCell = ['episode'].includes(
+                          cell.column.id
+                        )
 
                         return (
                           <Td
@@ -169,14 +171,25 @@ export async function getStaticPaths() {
   const paramsArray = []
   Object.keys(seasonEpisodeSceneCounts).forEach((seasonNum) => {
     Object.keys(seasonEpisodeSceneCounts[seasonNum]).forEach((episodeNum) => {
-      paramsArray.push({
-        params: {
-          seasonId: seasonNum.toString(),
-          episodeId: episodeNum.toString(),
-        },
-      })
+      for (
+        let i = 0;
+        i < seasonEpisodeSceneCounts[seasonNum][episodeNum];
+        i++
+      ) {
+        const sceneNum = i + 1
+
+        paramsArray.push({
+          params: {
+            seasonId: seasonNum.toString(),
+            episodeId: episodeNum.toString(),
+            sceneId: sceneNum.toString(),
+          },
+        })
+      }
     })
   })
+
+  console.log(paramsArray)
 
   return {
     fallback: false,
@@ -187,11 +200,16 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   const seasonId = context.params.seasonId
   const episodeId = context.params.episodeId
-  const linesFromEpisodeRes = await getLinesFromEpisode(seasonId, episodeId)
+  const sceneId = context.params.sceneId
+  const linesFromSceneRes = await getLinesFromEpisode(
+    seasonId,
+    episodeId,
+    sceneId
+  )
 
   return {
     props: {
-      linesFromEpisodeRes,
+      linesFromSceneRes,
     },
 
     revalidate: 60,

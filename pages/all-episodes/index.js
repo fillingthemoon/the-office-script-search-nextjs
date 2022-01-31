@@ -53,6 +53,7 @@ const Home = (props) => {
                           <Td
                             key={j}
                             onClick={() => handleClickCell(episodeItem)}
+                            color={'secondary.500'}
                             _hover={
                               episodeItem && {
                                 textDecoration: 'underline',
