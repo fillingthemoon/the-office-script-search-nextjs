@@ -13,6 +13,8 @@ const primary = '#01161e'
 const primaryL = '#01161e'
 const primaryD = '#01161e'
 
+const secondary = '#f94144'
+
 export { black, grayL, grayLL, gray, grayD, grayDD, white, primary, primaryL }
 
 // Theme
@@ -27,6 +29,9 @@ const theme = extendTheme({
   colors: {
     black: {
       500: black,
+    },
+    secondary: {
+      500: secondary
     },
     gray: {
       100: grayLL,

@@ -17,7 +17,7 @@ const PageLoadingSpinner = () => {
         transform="translate(-50%,-50%)"
       >
         <Spinner
-          thickness="12px"
+          thickness="8px"
           speed="0.65s"
           emptyColor="gray.200"
           color="primary.500"

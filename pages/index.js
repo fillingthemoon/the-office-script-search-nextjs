@@ -155,6 +155,32 @@ const ResultsTable = (props) => {
       useSortBy
     )
 
+  const handleClickCell = (clickableCell, cell) => {
+    if (!clickableCell) {
+      return
+    }
+
+    const column = cell.column.id
+    const season = cell.row.cells[1].value
+    const episode = cell.row.cells[2].value
+    const scene = cell.row.cells[3].value
+
+    switch (column) {
+      case 'season':
+        router.push(`/all-episodes/${season}`)
+        break
+      case 'episode':
+        router.push(`/all-episodes/${season}/${episode}`)
+        break
+      case 'scene':
+        router.push(`/all-episodes/${season}/${episode}/${scene}`)
+        break
+      default:
+        router.push(`/404/`)
+        break
+    }
+  }
+
   return (
     searchResults.length > 0 && (
       <Flex fontSize="1.2rem" flexDirection="column" align="center">
@@ -201,16 +227,32 @@ const ResultsTable = (props) => {
                 prepareRow(row)
                 return (
                   <Tr key={i} {...row.getRowProps()}>
-                    {row.cells.map((cell, j) => (
-                      <Td
-                        key={j}
-                        {...cell.getCellProps()}
-                        isNumeric={cell.column.isNumeric}
-                        onClick={() => router.push('/all-episodes')}
-                      >
-                        {cell.render('Cell')}
-                      </Td>
-                    ))}
+                    {row.cells.map((cell, j) => {
+                      const clickableCell = [
+                        'season',
+                        'episode',
+                        'scene',
+                      ].includes(cell.column.id)
+
+                      return (
+                        <Td
+                          key={j}
+                          {...cell.getCellProps()}
+                          isNumeric={cell.column.isNumeric}
+                          onClick={() => handleClickCell(clickableCell, cell)}
+                          color={clickableCell && 'secondary.500'}
+                          fontWeight={clickableCell && 600}
+                          _hover={
+                            clickableCell && {
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                            }
+                          }
+                        >
+                          {cell.render('Cell')}
+                        </Td>
+                      )
+                    })}
                   </Tr>
                 )
               })}
