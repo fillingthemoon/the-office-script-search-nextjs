@@ -166,9 +166,6 @@ const ResultsTable = (props) => {
     const scene = cell.row.cells[3].value
 
     switch (column) {
-      case 'season':
-        router.push(`/all-episodes/${season}`)
-        break
       case 'episode':
         router.push(`/all-episodes/${season}/${episode}`)
         break
@@ -229,7 +226,6 @@ const ResultsTable = (props) => {
                   <Tr key={i} {...row.getRowProps()}>
                     {row.cells.map((cell, j) => {
                       const clickableCell = [
-                        'season',
                         'episode',
                         'scene',
                       ].includes(cell.column.id)
