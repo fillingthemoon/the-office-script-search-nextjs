@@ -1,27 +1,24 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import {
-  Flex,
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-} from '@chakra-ui/react'
+import { Flex, Box, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import Layout from '../../components/layout'
 
 import { getAllEpisodes } from '../api/the-office-lines'
+import PageLoadingSpinner from '../../components/pageLoadingSpinner'
 
 const Home = (props) => {
   const { seasonNums, episodes } = props
+
+  const [showSpinner, setShowSpinner] = useState(false)
   const router = useRouter()
 
   const handleClickCell = (episodeItem) => {
     if (!episodeItem) {
       return
     }
+
+    setShowSpinner(true)
 
     const { season, episode, title } = episodeItem
 
@@ -61,7 +58,8 @@ const Home = (props) => {
                               }
                             }
                           >
-                            {episodeItem && `Ep. ${episodeItem.episode} - ${episodeItem.title}`}
+                            {episodeItem &&
+                              `Ep. ${episodeItem.episode} - ${episodeItem.title}`}
                           </Td>
                         )
                       })}
@@ -72,6 +70,7 @@ const Home = (props) => {
             </Table>
           </Box>
         </Flex>
+        {showSpinner && <PageLoadingSpinner />}
       </Layout>
     </div>
   )

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import {
@@ -21,9 +21,12 @@ import {
   getSeasonEpisodeSceneCounts,
   getLinesFromEpisode,
 } from '../../../api/the-office-lines'
+import PageLoadingSpinner from '../../../../components/pageLoadingSpinner'
 
 const Home = (props) => {
   const { linesFromEpisodeRes } = props
+
+  const [showSpinner, setShowSpinner] = useState(false)
   const router = useRouter()
 
   const data = useMemo(() => linesFromEpisodeRes, [linesFromEpisodeRes])
@@ -79,6 +82,8 @@ const Home = (props) => {
     if (!clickableCell) {
       return
     }
+
+    setShowSpinner(true)
 
     const column = cell.column.id
     const season = cell.row.cells[1].value
@@ -157,6 +162,7 @@ const Home = (props) => {
             </Table>
           </Box>
         </Flex>
+        {showSpinner && <PageLoadingSpinner />}
       </Layout>
     </div>
   )

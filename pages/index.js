@@ -103,7 +103,7 @@ const SearchForm = (props) => {
 }
 
 const ResultsTable = (props) => {
-  const { searchValueSaved, searchResults } = props
+  const { searchValueSaved, searchResults, setShowSpinner } = props
   const router = useRouter()
 
   const data = useMemo(() => searchResults, [searchResults])
@@ -159,6 +159,8 @@ const ResultsTable = (props) => {
     if (!clickableCell) {
       return
     }
+
+    setShowSpinner(true)
 
     const column = cell.column.id
     const season = cell.row.cells[1].value
@@ -225,10 +227,9 @@ const ResultsTable = (props) => {
                 return (
                   <Tr key={i} {...row.getRowProps()}>
                     {row.cells.map((cell, j) => {
-                      const clickableCell = [
-                        'episode',
-                        'scene',
-                      ].includes(cell.column.id)
+                      const clickableCell = ['episode', 'scene'].includes(
+                        cell.column.id
+                      )
 
                       return (
                         <Td
@@ -281,9 +282,10 @@ const Home = (props) => {
           <ResultsTable
             searchValueSaved={searchValueSaved}
             searchResults={searchResults}
+            setShowSpinner={setShowSpinner}
           />
-          {showSpinner && <PageLoadingSpinner />}
         </Flex>
+        {showSpinner && <PageLoadingSpinner />}
       </Layout>
     </div>
   )
