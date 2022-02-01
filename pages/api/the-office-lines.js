@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       .split(' ') // separate search query into words array
     const fullTextSearchQuery = wordsArr
       .map((word) => {
-        return `'${word}'`
+        return `"${word}"`
       })
       .join(' & ')
 
