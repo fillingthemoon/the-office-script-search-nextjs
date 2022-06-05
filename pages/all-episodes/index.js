@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { Flex, Box, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
 import Layout from '../../components/layout'
 
-import { getAllEpisodes } from '../api/the-office-lines'
+import { getAllEpisodes } from '../api/the-office-lines-all'
 import PageLoadingSpinner from '../../components/pageLoadingSpinner'
 
 const Home = (props) => {

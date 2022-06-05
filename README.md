@@ -12,5 +12,5 @@
 
 ## Backend (server)
 - Next.js
-- Supabase
+- MongoDB
 - Vercel

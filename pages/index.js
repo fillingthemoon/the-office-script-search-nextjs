@@ -36,7 +36,7 @@ const SearchForm = (props) => {
     setSearchValueSaved(searchValue)
 
     const theOfficeLinesRes = await fetch(
-      `/api/the-office-lines?q=${searchValue}`
+      `/api/the-office-lines-all?q=${searchValue}`
     )
     const theOfficeLinesResJSON = await theOfficeLinesRes.json()
 

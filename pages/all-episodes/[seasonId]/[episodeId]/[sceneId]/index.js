@@ -15,21 +15,19 @@ import {
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import { useTable, useSortBy } from 'react-table'
 
+import axios from 'axios'
+
 import Layout from '../../../../../components/layout'
 
-import {
-  getSeasonEpisodeSceneCounts,
-  getLinesFromEpisode,
-} from '../../../../api/the-office-lines'
 import PageLoadingSpinner from '../../../../../components/pageLoadingSpinner'
 
 const Home = (props) => {
-  const { linesFromSceneRes } = props
+  const { linesFromScene } = props
 
   const [showSpinner, setShowSpinner] = useState(false)
   const router = useRouter()
 
-  const data = useMemo(() => linesFromSceneRes, [linesFromSceneRes])
+  const data = useMemo(() => linesFromScene, [linesFromScene])
 
   const columns = useMemo(
     () => [
@@ -96,7 +94,7 @@ const Home = (props) => {
   return (
     <div>
       <Head>
-        <title>{`Episode ${linesFromSceneRes[0].episode} Lines | The Office Script Search`}</title>
+        <title>{`Episode ${linesFromScene[0].episode} Lines | The Office Script Search`}</title>
       </Head>
       <Layout>
         <Flex justify="center">
@@ -170,53 +168,27 @@ const Home = (props) => {
   )
 }
 
-// (Static Generation): Specify dynamic routes to pre-render pages based on data.
-// export async function getStaticPaths() {
-//   const seasonEpisodeSceneCounts = await getSeasonEpisodeSceneCounts()
-
-//   const paramsArray = []
-//   Object.keys(seasonEpisodeSceneCounts).forEach((seasonNum) => {
-//     Object.keys(seasonEpisodeSceneCounts[seasonNum]).forEach((episodeNum) => {
-//       for (
-//         let i = 0;
-//         i < seasonEpisodeSceneCounts[seasonNum][episodeNum];
-//         i++
-//       ) {
-//         const sceneNum = i + 1
-
-//         paramsArray.push({
-//           params: {
-//             seasonId: seasonNum.toString(),
-//             episodeId: episodeNum.toString(),
-//             sceneId: sceneNum.toString(),
-//           },
-//         })
-//       }
-//     })
-//   })
-
-//   return {
-//     fallback: false,
-//     paths: paramsArray,
-//   }
-// }
-
 export async function getServerSideProps(context) {
-  const seasonId = context.params.seasonId
-  const episodeId = context.params.episodeId
-  const sceneId = context.params.sceneId
-  const linesFromSceneRes = await getLinesFromEpisode(
-    seasonId,
-    episodeId,
-    sceneId
+  const { seasonId, episodeId, sceneId } = context.params
+
+  const linesFromSceneRes = await axios.post(
+    'http://localhost:8080/api/the-office-lines-episode',
+    {
+      seasonId,
+      episodeId,
+      sceneId,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
   )
 
   return {
     props: {
-      linesFromSceneRes,
+      linesFromScene: linesFromSceneRes.data,
     },
-
-    // revalidate: 60,
   }
 }
 
