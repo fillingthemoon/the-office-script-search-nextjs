@@ -171,8 +171,11 @@ const Home = (props) => {
 export async function getServerSideProps(context) {
   const { seasonId, episodeId, sceneId } = context.params
 
+  const baseUrl = context.req.headers.host
+  const httpType = context.req.headers.referer?.split('://')[0]
+
   const linesFromSceneRes = await axios.post(
-    'http://localhost:8080/api/the-office-lines-episode',
+    `${httpType}://${baseUrl}/api/the-office-lines-episode`,
     {
       seasonId,
       episodeId,
